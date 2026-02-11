@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti, Melita ❤️</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#ff9a9e,#fecfef,#ffecd2);
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    overflow:hidden;
+    color:#d63384;
+}
+
+.container{
+    background:rgba(255,255,255,0.92);
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    max-width:420px;
+    width:90%;
+    z-index:10;
+}
+
+h1{
+    font-style:italic;
+}
+
+p{
+    font-size:16px;
+}
+
+/* BOTONES */
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:25px;
+}
+
+button{
+    padding:15px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:40px;
+    cursor:pointer;
+    transition:0.3s;
+    font-weight:bold;
+}
+
+#yes{
+    background:linear-gradient(45deg,#ff4d6d,#ff1744);
+    color:white;
+}
+
+#no{
+    background:linear-gradient(45deg,#a8e6cf,#dcedc8);
+}
+
+/* CORAZONES */
+.heart{
+    position:absolute;
+    font-size:22px;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    from{transform:translateY(-10vh);}
+    to{transform:translateY(110vh);}
+}
+
+.hidden{
+    display:none;
+}
+
+.congrats{
+    animation:fade 1s ease;
+}
+
+@keyframes fade{
+    from{opacity:0; transform:scale(0.7);}
+    to{opacity:1; transform:scale(1);}
+}
+
+/* BOTÓN MÚSICA */
+.music-control{
+    position:fixed;
+    top:15px;
+    right:15px;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:none;
+    background:white;
+    font-size:22px;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    z-index:20;
+}
+
+/* Ocultar reproductor YouTube */
+#player{
+    position:absolute;
+    width:0;
+    height:0;
+}
+</style>
+</head>
+
+<body>
+
+<button class="music-control" id="musicBtn">🎵</button>
+
+<!-- Reproductor YouTube oculto -->
+<div id="player"></div>
+
+<div class="container" id="main">
+    <h1>Melita hermosa 💕</h1>
+    <p>
+        Desde que llegaste a mi vida todo es más bonito.<br>
+        Tu sonrisa ilumina mis días y tu amor hace latir mi corazón.<br><br>
+        Por eso quiero preguntarte algo muy especial...
+    </p>
+
+    <h2>¿Quieres ser mi San Valentín? ❤️</h2>
+
+    <div class="buttons">
+        <button id="yes">Sí 💖</button>
+        <button id="no">No</button>
+    </div>
+</div>
+
+<div class="container hidden congrats" id="congrats">
+    <h1>¡Gracias por decir que sí! 💘</h1>
+    <p>
+        Prometo amarte, cuidarte y hacerte feliz cada día.<br><br>
+        Nos vemos en los pautines a las <b>10:00 AM</b><br>
+        el <b>14 de febrero</b> 🌹<br><br>
+        Te amo muchísimo Melita ❤️<br>
+        Con amor,<br>
+        <b>Anthony Ramírez</b>
+    </p>
+</div>
+
+<script>
+// ---------- YouTube Música ----------
+let player;
+let musicStarted = false;
+
+// Cargar API
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(tag);
+
+// Video: Joan Sebastian - Voy a conquistarte
+function onYouTubeIframeAPIReady(){
+    player = new YT.Player('player',{
+        height:'0',
+        width:'0',
+        videoId:'6r5zFh0Z8vE',
+        playerVars:{
+            autoplay:0,
+            loop:1,
+            playlist:'6r5zFh0Z8vE'
+        }
+    });
+}
+
+function playMusic(){
+    if(player && !musicStarted){
+        player.playVideo();
+        musicStarted = true;
+        document.getElementById("musicBtn").textContent = "🔊";
+    }
+}
+
+document.getElementById("musicBtn").onclick = playMusic;
+
+// ---------- Botones ----------
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const main = document.getElementById("main");
+const congrats = document.getElementById("congrats");
+
+let noScale = 1;
+let yesScale = 1;
+
+// Corazones
+function createHearts(){
+    for(let i=0;i<40;i++){
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML=["❤️","💖","💕","💘","💓"][Math.floor(Math.random()*5)];
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.animationDuration=(3+Math.random()*5)+"s";
+        document.body.appendChild(heart);
+    }
+}
+
+// NO se hace pequeño
+noBtn.addEventListener("click",()=>{
+    playMusic();
+
+    noScale -= 0.2;
+    yesScale += 0.2;
+
+    noBtn.style.transform = `scale(${noScale})`;
+    yesBtn.style.transform = `scale(${yesScale})`;
+
+    if(noScale <= 0.2){
+        noBtn.style.display = "none";
+        yesBtn.style.transform = "scale(1.8)";
+    }
+});
+
+// SÍ
+yesBtn.addEventListener("click",()=>{
+    playMusic();
+    main.classList.add("hidden");
+    congrats.classList.remove("hidden");
+    createHearts();
+    document.title="Ella dijo que sí ❤️";
+});
+git branch -M main
+git remote add origin https://github.com/hectorcuasquer1anthonyramirez2-bit/carta-san-valentin-.git
+git push -u origin main
+</script>
+
+</body>
+</html>
+</html>
